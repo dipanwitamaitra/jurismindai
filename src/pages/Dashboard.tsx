@@ -86,7 +86,13 @@ export default function Dashboard() {
     if (error) {
       console.error('Error loading messages:', error);
     } else {
-      setMessages(data || []);
+      const typedMessages: Message[] = (data || []).map((m) => ({
+        id: m.id,
+        role: m.role as 'user' | 'assistant',
+        content: m.content,
+        created_at: m.created_at,
+      }));
+      setMessages(typedMessages);
     }
   };
 
@@ -144,11 +150,18 @@ export default function Dashboard() {
 
       if (userMsgError) throw userMsgError;
 
+      const typedUserMsg: Message = {
+        id: savedUserMsg.id,
+        role: savedUserMsg.role as 'user' | 'assistant',
+        content: savedUserMsg.content,
+        created_at: savedUserMsg.created_at,
+      };
+
       // Update with real message
-      setMessages((prev) => prev.map((m) => (m.id === 'temp-user' ? savedUserMsg : m)));
+      setMessages((prev) => prev.map((m) => (m.id === 'temp-user' ? typedUserMsg : m)));
 
       // Call AI
-      const allMessages = [...messages.filter(m => m.id !== 'temp-user'), savedUserMsg];
+      const allMessages = [...messages.filter(m => m.id !== 'temp-user'), typedUserMsg];
       const response = await supabase.functions.invoke('chat', {
         body: {
           messages: allMessages.map((m) => ({ role: m.role, content: m.content })),
@@ -174,7 +187,14 @@ export default function Dashboard() {
 
       if (aiMsgError) throw aiMsgError;
 
-      setMessages((prev) => [...prev, savedAiMsg]);
+      const typedAiMsg: Message = {
+        id: savedAiMsg.id,
+        role: savedAiMsg.role as 'user' | 'assistant',
+        content: savedAiMsg.content,
+        created_at: savedAiMsg.created_at,
+      };
+
+      setMessages((prev) => [...prev, typedAiMsg]);
 
       // Update conversation title if first message
       if (messages.length === 0) {
