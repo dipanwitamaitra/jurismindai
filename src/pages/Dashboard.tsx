@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, LogOut, Plus, MessageSquare, Loader2, AlertTriangle, Scale, Users, GraduationCap } from 'lucide-react';
+import { Send, LogOut, Plus, MessageSquare, Loader2, AlertTriangle, Scale, Users, GraduationCap, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Logo } from '@/components/Logo';
@@ -8,6 +8,17 @@ import { useAuth } from '@/lib/auth-context';
 import { ROLE_INFO, ROLE_SYSTEM_PROMPTS, UserRole } from '@/lib/role-context';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 interface Message {
   id: string;
@@ -116,6 +127,37 @@ export default function Dashboard() {
       setConversations([data, ...conversations]);
       setCurrentConversation(data.id);
       setMessages([]);
+    }
+  };
+
+  const deleteConversation = async (conversationId: string) => {
+    try {
+      // Delete messages first (due to foreign key if any)
+      await supabase
+        .from('messages')
+        .delete()
+        .eq('conversation_id', conversationId);
+
+      // Delete conversation
+      const { error } = await supabase
+        .from('conversations')
+        .delete()
+        .eq('id', conversationId);
+
+      if (error) throw error;
+
+      setConversations((prev) => prev.filter((c) => c.id !== conversationId));
+      
+      if (currentConversation === conversationId) {
+        const remaining = conversations.filter((c) => c.id !== conversationId);
+        setCurrentConversation(remaining.length > 0 ? remaining[0].id : null);
+        setMessages([]);
+      }
+
+      toast.success('Chat deleted');
+    } catch (error) {
+      console.error('Error deleting conversation:', error);
+      toast.error('Failed to delete chat');
     }
   };
 
@@ -240,18 +282,49 @@ export default function Dashboard() {
 
         <div className="flex-1 overflow-y-auto p-2 space-y-1">
           {conversations.map((conv) => (
-            <button
+            <div
               key={conv.id}
-              onClick={() => setCurrentConversation(conv.id)}
-              className={`w-full text-left p-3 rounded-lg transition-all flex items-center gap-3 ${
+              className={`group w-full text-left p-3 rounded-lg transition-all flex items-center gap-3 ${
                 currentConversation === conv.id
                   ? 'bg-primary/10 text-primary border border-primary/20'
                   : 'hover:bg-secondary text-muted-foreground hover:text-foreground'
               }`}
             >
-              <MessageSquare size={16} />
-              <span className="truncate text-sm">{conv.title}</span>
-            </button>
+              <button
+                onClick={() => setCurrentConversation(conv.id)}
+                className="flex-1 flex items-center gap-3 min-w-0"
+              >
+                <MessageSquare size={16} className="shrink-0" />
+                <span className="truncate text-sm">{conv.title}</span>
+              </button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button
+                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-destructive/20 rounded transition-all"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Trash2 size={14} className="text-destructive" />
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Chat?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will permanently delete this conversation and all its messages. This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => deleteConversation(conv.id)}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
           ))}
         </div>
 
