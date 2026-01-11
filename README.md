@@ -1,73 +1,76 @@
-# Welcome to your Lovable project
+# Jurismind AI ⚖️
 
-## Project info
+Jurismind AI is a role-based, explainable AI legal guidance platform built for Bangladesh.  
+It helps citizens understand their legal rights, assists lawyers with structured reasoning, and supports law students in learning legal concepts.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+This project was built as a *hackathon MVP* with a focus on clarity, accessibility, and practical impact.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🚀 Features
 
-**Use Lovable**
+- Citizen Mode for simple legal guidance
+- Lawyer Mode for structured legal reasoning
+- Law Student Mode for learning and exam support
+- Explainable AI responses
+- Modern, responsive SaaS UI
+- Mobile-first design
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🧑‍⚖️ User Roles
 
-**Use your preferred IDE**
+- Citizen  
+- Lawyer  
+- Law Student  
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Each role receives tailored AI responses based on context.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## 🧪 Demo Accounts
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+| Role        | Email                     | Password  |
+|-------------|---------------------------|-----------|
+| Lawyer      | lawyer@jurismind.app      | 123admin  |
+| Citizen     | citizen@jurismind.app     | 123admin  |
+| Law Student | student@jurismind.app     | 123admin  |
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 🛠 Tech Stack
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
+*Frontend*
+- Next.js (App Router)
 - TypeScript
-- React
-- shadcn-ui
 - Tailwind CSS
+- Framer Motion
 
-## How can I deploy this project?
+*Backend*
+- Next.js API Routes
+- Firebase Auth
+- Firestore (RBAC)
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+*AI*
+- Google Gemini API
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## 🎯 Purpose
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- Improve access to legal understanding
+- Reduce confusion around legal processes
+- Support professionals and students
+- Demonstrate ethical, explainable AI in law
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
+## ⚠️ Disclaimer
+
+Jurismind AI provides general legal information only and does not replace professional legal advice.
+
+---
+
+## 📄 License
+
+MIT License
